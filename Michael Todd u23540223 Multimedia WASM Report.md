@@ -1,3 +1,33 @@
+<style>
+pre {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+code {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+h1, h2, h3 {
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+pre code {
+    display: block;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+pre.long-code {
+    page-break-inside: auto;
+    break-inside: auto;
+}
+</style>
+
 <div style="width: 100%; text-align: center;">
 	<h2 style="color: #000">Michael Todd</h2>
 	<h2 style="color: #000">u23540223</h2>
@@ -6,15 +36,44 @@
 
 # Introduction to WebAssembly - A Practical Guide for 2nd-Year Multimedia Students
 
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Tutorial - Building an Interactive Image Filter Application](#tutorial---building-an-interactive-image-filter-application)
+   - [Step 1 - Setting Up Your Environment](#step-1---setting-up-your-environment)
+   - [Running This Project](#running-this-project)
+   - [Step 2 - Writing the C++ Image Processing Code](#step-2---writing-the-c-image-processing-code)
+   - [Step 3 - Compiling to WebAssembly](#step-3---compiling-to-webassembly)
+   - [Step 4 - Creating the Web Interface](#step-4---creating-the-web-interface)
+   - [Step 5 - JavaScript Integration](#step-5---javascript-integration---the-complete-implementation)
+   - [Step 6 - Understanding Memory Management](#step-6---understanding-memory-management-for-multimedia-applications)
+   - [Step 7 - Testing and Debugging](#step-7---testing-and-debugging-your-multimedia-application)
+3. [How WebAssembly Integrates with Multimedia Education](#how-webassembly-integrates-with-multimedia-education)
+4. [Career Relevance for Multimedia Students](#career-relevance-for-multimedia-students)
+5. [The Future of WebAssembly in Web Development](#the-future-of-webassembly-in-web-development)
+6. [Conclusion - Next Steps for Multimedia Students](#conclusion---next-steps-for-multimedia-students)
+7. [References](#references)
+
+---
+
+**Course:** IMY 320 - Multimedia Trends 2025  
+**University:** University of Pretoria  
+**Date:** September 2025  
+**GitHub Repository:** https://github.com/michaeltoddprogramming/WASMImageProcessor
+
+---
+
 ## Introduction
 
-WebAssembly (WASM) represents a significant advancement in web development technology, offering 2nd-year multimedia students unprecedented opportunities to bridge high-performance computing with modern web applications (1). As defined by the WebAssembly Community Group, WASM is "a binary instruction format for a stack-based virtual machine" designed to enable near-native performance for web applications (1). This technology addresses a fundamental limitation that multimedia students encounter: the performance gap between computationally intensive applications and JavaScript's execution capabilities.
+WebAssembly (WASM) represents a significant advancement in web development technology, offering 2nd-year multimedia students unprecedented opportunities to bridge high-performance computing with modern web applications [(1)](#references). As defined by the WebAssembly Community Group, WASM is "a binary instruction format for a stack-based virtual machine" designed to enable near-native performance for web applications [(1)](#references). This technology addresses a fundamental limitation that multimedia students encounter: the performance gap between computationally intensive applications and JavaScript's execution capabilities.
 
-For multimedia students, WebAssembly solves critical challenges in multimedia processing, data visualization, and interactive content creation. Unlike traditional JavaScript, which struggles with intensive computational tasks, WASM allows students to leverage languages like C++ and Rust to achieve performance levels approaching native desktop applications (3). This capability is particularly relevant for multimedia applications requiring real-time image processing, audio manipulation, or complex data visualizations - core competencies in the multimedia curriculum.
+For multimedia students, WebAssembly solves critical challenges in multimedia processing, data visualization, and interactive content creation. Unlike traditional JavaScript, which struggles with intensive computational tasks, WASM allows students to leverage languages like C++ and Rust to achieve performance levels approaching native desktop applications [(3)](#references). This capability is particularly relevant for multimedia applications requiring real-time image processing, audio manipulation, or complex data visualizations - core competencies in the multimedia curriculum.
 
-WebAssembly's integration into your degree program connects multiple course concepts cohesively. The low-level programming principles from systems courses align with WASM's binary format design, while web development knowledge from IMY 210/220 provides the foundation for WASM integration (4). This compilation process demonstrates how multimedia applications can leverage performance optimization while maintaining web accessibility.
+WebAssembly's integration into your degree program connects multiple course concepts cohesively. The low-level programming principles from systems courses align with WASM's binary format design, while web development knowledge from IMY 210/220 provides the foundation for WASM integration [(4)](#references). This compilation process demonstrates how multimedia applications can leverage performance optimization while maintaining web accessibility.
 
-Looking toward your future careers, WASM opens diverse opportunities in the multimedia industry. Major companies like Adobe have successfully ported complex applications like Photoshop to web browsers using WebAssembly, while game development frameworks like Unity compile directly to WASM for browser-based gaming (3). For multimedia professionals, this technology enables creating sophisticated web-based tools for image processing, audio editing, and interactive multimedia experiences without requiring desktop application installations.
+Looking toward your future careers, WASM opens diverse opportunities in the multimedia industry. Major companies like Adobe have successfully ported complex applications like Photoshop to web browsers using WebAssembly, while game development frameworks like Unity compile directly to WASM for browser-based gaming [(3)](#references). For multimedia professionals, this technology enables creating sophisticated web-based tools for image processing, audio editing, and interactive multimedia experiences without requiring desktop application installations.
 
 The strategic importance of WASM in multimedia careers cannot be overstated. As web applications increasingly replace traditional desktop software, multimedia professionals who understand both creative content development and the underlying performance optimization technologies will possess competitive advantages. WebAssembly enables multimedia developers to create professional-grade tools accessible through web browsers, expanding market reach while maintaining performance standards.
 
@@ -32,7 +91,7 @@ You can clone the repository to follow along or examine the complete implementat
 
 ### Step 1 - Setting Up Your Environment
 
-For 2nd-year multimedia students, setting up the development environment is crucial for multimedia application development. We need to install Emscripten - the essential toolchain that converts C++ code into WebAssembly (2). This compiler differs from traditional desktop compilers by targeting the web platform, enabling multimedia applications to run efficiently in browsers.
+For 2nd-year multimedia students, setting up the development environment is crucial for multimedia application development. We need to install Emscripten - the essential toolchain that converts C++ code into WebAssembly [(2)](#references). This compiler differs from traditional desktop compilers by targeting the web platform, enabling multimedia applications to run efficiently in browsers.
 
 **For Windows users**
 1. Download EMSDK from [GitHub](https://github.com/emscripten-core/emsdk)
@@ -198,7 +257,7 @@ extern "C" {
 ```
 
 **Understanding the Code Structure for Multimedia Students:** 
-These are standard C++ image processing algorithms enhanced with WebAssembly-specific annotations (2). For 2nd-year multimedia students, this demonstrates how multimedia algorithms translate to web environments. The `extern "C"` wrapper prevents C++ name mangling, while `EMSCRIPTEN_KEEPALIVE` ensures the optimizer preserves our functions for web access - critical concepts for multimedia web development.
+These are standard C++ image processing algorithms enhanced with WebAssembly-specific annotations [(2)](#references). For 2nd-year multimedia students, this demonstrates how multimedia algorithms translate to web environments. The `extern "C"` wrapper prevents C++ name mangling, while `EMSCRIPTEN_KEEPALIVE` ensures the optimizer preserves our functions for web access - critical concepts for multimedia web development.
 
 ### Step 3 - Compiling to WebAssembly
 For multimedia students, this compilation step transforms desktop-style multimedia code into web-compatible bytecode. Understanding this process is crucial for 2nd-year students planning to develop multimedia applications that reach broader audiences through web browsers.
@@ -212,7 +271,7 @@ emcc imageprocessing.cpp -o imagefilters.js \
 
 **Understanding the Compilation Command for Multimedia Students:**
 - `emcc imageprocessing.cpp` - Our multimedia processing source file
-- `-o imagefilters.js` - Creates a JavaScript wrapper for web integration (2)
+- `-o imagefilters.js` - Creates a JavaScript wrapper for web integration [(2)](#references)
 - `-s EXPORTED_FUNCTIONS` - Specifies which functions browsers can access (note the underscores!)
 - `-s ALLOW_MEMORY_GROWTH=1` - Enables dynamic memory allocation for large multimedia files
 - `-O3` - Maximum optimization for multimedia performance (essential for real-time processing)
@@ -222,7 +281,7 @@ This creates two files
 - `imagefilters.wasm`-> The actual binary WebAssembly code
 
 ### Step 4 - Creating the Web Interface
-For multimedia students, creating intuitive user interfaces is essential. This HTML interface demonstrates how 2nd-year students can integrate WebAssembly functionality with accessible web interfaces, combining multimedia processing with user experience design principles (4). 
+For multimedia students, creating intuitive user interfaces is essential. This HTML interface demonstrates how 2nd-year students can integrate WebAssembly functionality with accessible web interfaces, combining multimedia processing with user experience design principles [(4)](#references). 
 
 ```html
 <!DOCTYPE html>
@@ -255,13 +314,7 @@ For multimedia students, creating intuitive user interfaces is essential. This H
     <h1>WebAssembly Image Processor</h1>
     <p>Demonstrating WASM vs JavaScript Performance</p>
     
-    <div>
-        <label for="imageUpload">Upload Your Image:</label>
-        <input type="file" id="imageUpload" accept="image/*">
-        <small>Supports JPG, PNG, GIF, etc.</small>
-    </div>
-    
-    <br>
+    <p><em>Using default LAB.png image for demonstration</em></p>
     
     <div>
         <label for="implementation">Processing Engine:</label>
@@ -290,10 +343,10 @@ For multimedia students, creating intuitive user interfaces is essential. This H
     
     <div>
         <h3>Original Image</h3>
-        <canvas id="originalCanvas" width="400" height="300"></canvas>
+        <img id="originalImage" src="screenshots/LAB.png" alt="Original LAB Image" style="max-width: 400px; border: 1px solid #ccc;">
         
         <h3>Processed Image</h3>
-        <canvas id="filteredCanvas" width="400" height="300"></canvas>
+        <img id="filteredImage" src="screenshots/LAB.png" alt="Processed LAB Image" style="max-width: 400px; border: 1px solid #ccc;">
     </div>
     
     <br>
@@ -310,17 +363,32 @@ For multimedia students, creating intuitive user interfaces is essential. This H
 ```
 
 ### Step 5 - JavaScript Integration - The Complete Implementation  
-This crucial step demonstrates how 2nd-year multimedia students bridge different programming environments. Understanding JavaScript-WebAssembly communication is essential for multimedia web development, as it enables high-performance processing while maintaining web accessibility (4).
+This crucial step demonstrates how 2nd-year multimedia students bridge different programming environments. Understanding JavaScript-WebAssembly communication is essential for multimedia web development, as it enables high-performance processing while maintaining web accessibility [(4)](#references).
 
 ```javascript
 // main app logic
 
 let originalImageData = null;
-let originalCanvas = document.getElementById('originalCanvas');
-let filteredCanvas = document.getElementById('filteredCanvas');
-let originalCtx = originalCanvas.getContext('2d');
-let filteredCtx = filteredCanvas.getContext('2d');
+let filteredImageElement;
 let wasmLoaded = false;
+
+// Load default image on startup
+function loadDefaultImage() {
+    const img = new Image();
+    img.onload = () => {
+        // Create a temporary canvas to extract image data
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        tempCanvas.width = img.width;
+        tempCanvas.height = img.height;
+        tempCtx.drawImage(img, 0, 0);
+        
+        originalImageData = tempCtx.getImageData(0, 0, img.width, img.height);
+        console.log('loaded default image:', img.width, 'x', img.height);
+    };
+    img.src = 'screenshots/LAB.png';
+}
 
 // JS versions of the filters for comparison
 
@@ -391,41 +459,21 @@ document.getElementById('intensity').addEventListener('input', (e) => {
     document.getElementById('intensityValue').textContent = e.target.value;
 });
 
-document.getElementById('imageUpload').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+// Initialize when page loads
+window.onload = () => {
+    console.log('PAGE LOADED - LOADING DEFAULT IMAGE');
     
+    // Initialize image elements
+    filteredImageElement = document.getElementById('filteredImage');
     
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-            const maxW = 800;
-            const maxH = 600;
-            let { width, height } = img;
-            
-            // don't want huge images slowing things down
-            if (width > maxW || height > maxH) {
-                const ratio = Math.min(maxW / width, maxH / height);
-                width = Math.floor(width * ratio);
-                height = Math.floor(height * ratio);
-            }
-            
-            originalCanvas.width = width;
-            originalCanvas.height = height;
-            filteredCanvas.width = width;
-            filteredCanvas.height = height;
-            
-            originalCtx.drawImage(img, 0, 0, width, height);
-            filteredCtx.drawImage(img, 0, 0, width, height);
-            
-            originalImageData = originalCtx.getImageData(0, 0, width, height);
-            console.log('loaded image:', width, 'x', height);
-        };
-        img.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-});
+    // Check WASM availability
+    setTimeout(() => {
+        checkWasmAvailability();
+    }, 2000);
+    
+    // Load the default LAB.png image
+    loadDefaultImage();
+};
 
 document.getElementById('applyFilter').addEventListener('click', async () => {
     if (!originalImageData) {
@@ -561,58 +609,25 @@ document.getElementById('applyFilter').addEventListener('click', async () => {
 });
 
 document.getElementById('resetImage').addEventListener('click', () => {
-    if (originalImageData) {
-        filteredCtx.putImageData(originalImageData, 0, 0);
-        document.getElementById('performance').innerHTML = 'Reset to original';
-        console.log('reset');
-    }
+    filteredImageElement.src = 'screenshots/LAB.png';
+    document.getElementById('performance').innerHTML = 'Reset to original LAB image';
+    console.log('reset to original');
 });
 
-// CREATE A DEFAULT TEST IMAGE ON PAGE LOAD
+// Initialize when page loads  
 window.onload = () => {
-    console.log('PAGE LOADED - CREATING DEFAULT TEST IMAGE');
+    console.log('PAGE LOADED - LOADING DEFAULT IMAGE');
     
-    // CREATE A COLORFUL TEST PATTERN
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 400;
-    canvas.height = 300;
+    // Initialize image elements
+    filteredImageElement = document.getElementById('filteredImage');
     
-    // GRADIENT BACKGROUND
-    const gradient = ctx.createLinearGradient(0, 0, 400, 300);
-    gradient.addColorStop(0, '#ff6b6b');
-    gradient.addColorStop(0.5, '#4ecdc4');
-    gradient.addColorStop(1, '#45b7d1');
+    // Check WASM availability
+    setTimeout(() => {
+        checkWasmAvailability();
+    }, 2000);
     
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 400, 300);
-    
-    // ADD SOME SHAPES FOR VISUAL INTEREST
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('WASM', 200, 100);
-    ctx.fillText('Demo', 200, 160);
-    
-    // ADD SOME CIRCLES
-    for (let i = 0; i < 20; i++) {
-        ctx.beginPath();
-        ctx.arc(
-            Math.random() * 400,
-            Math.random() * 300,
-            Math.random() * 20 + 5,
-            0, 2 * Math.PI
-        );
-        ctx.fillStyle = \`rgba(255, 255, 255, \${Math.random() * 0.5 + 0.2})\`;
-        ctx.fill();
-    }
-    
-    // DRAW ON BOTH CANVASES
-    originalCtx.drawImage(canvas, 0, 0);
-    filteredCtx.drawImage(canvas, 0, 0);
-    
-    // STORE AS ORIGINAL IMAGE DATA
-    originalImageData = originalCtx.getImageData(0, 0, 400, 300);
+    // Load the default LAB.png image
+    loadDefaultImage();
 };
 ```
 
@@ -659,7 +674,7 @@ if (typeof HEAPU8 !== 'undefined') {
 
 ### Step 7 - Testing and Debugging Your Multimedia Application
 
-Testing and debugging skills are crucial for 2nd-year multimedia students developing web-based applications. This systematic approach ensures your WebAssembly multimedia tools function correctly across different browsers and platforms (4). 
+Testing and debugging skills are crucial for 2nd-year multimedia students developing web-based applications. This systematic approach ensures your WebAssembly multimedia tools function correctly across different browsers and platforms [(4)](#references). 
 
 **1. Start a Local Server**
 You can't just open the HTML file directly in your browser due to CORS restrictions. Use one of these methods
@@ -696,11 +711,9 @@ Having completed this practical implementation, 2nd-year multimedia students can
 
 ### Connection to Core CS Concepts
 
-**Systems Programming (COS 284)** WebAssembly brings low-level programming concepts to the web. The manual memory management we demonstrated mirrors what you do in C++ systems programming. The difference is that instead of targeting a specific operating system, we're targeting the web platform.
+**Computer Organisation and Architecture (COS 284)** WebAssembly brings low-level programming concepts to the web. The manual memory management we demonstrated mirrors systems programming concepts, while WASM's stack-based virtual machine architecture relates directly to CPU instruction sets and execution models. Understanding how WASM executes instructions helps you write more efficient code.
 
 **Data Structures and Algorithms (COS 212/216)** The image processing algorithms we implemented demonstrate how data structure choices affect performance. Notice how we used contiguous memory arrays for pixel data? That's because sequential memory access is much faster than random access, especially in WASM.
-
-**Computer Architecture (COS 284)** WASM's stack-based virtual machine architecture relates directly to what you learn about CPU instruction sets and execution models. Understanding how WASM executes instructions helps you write more efficient code.
 
 ### Career Relevance for Multimedia Students
 
@@ -738,6 +751,39 @@ This isn't about replacing JavaScript - it's about adding to it. Think of WASM a
 **WebAssembly Garbage Collection (WasmGC)** Will enable languages like Java, C#, and Python to compile more efficiently to WASM by providing built-in garbage collection.
 
 **Component Model** A standardization effort to make WASM modules more composable and interoperable, similar to how we use libraries and frameworks today.
+
+## Performance Testing Results
+
+To validate the performance advantages of WebAssembly for multimedia processing, I conducted systematic testing on the LAB.png image using different blur intensities. The results demonstrate significant performance improvements when using WebAssembly compared to JavaScript implementations.
+
+### Test Environment
+- **Browser:** Chrome (latest version)
+- **Image:** LAB.png (default test image)
+- **Filter:** Blur effect with varying intensity levels
+- **Measurement:** Processing time in milliseconds (ms)
+
+### Performance Comparison Results
+
+| Effect | Implementation | Intensity | Processing Time (ms) | Performance Gain |
+|--------|----------------|-----------|---------------------|------------------|
+| Blur   | JavaScript     | 10        | 3378.0              | -                |
+| Blur   | WebAssembly    | 10        | 2245.5              | **33.5% faster** |
+| Blur   | JavaScript     | 20        | 11723.8             | -                |
+| Blur   | WebAssembly    | 20        | 2646.8              | **77.4% faster** |
+
+### Analysis of Results
+
+The performance testing reveals several critical insights for multimedia developers:
+
+1. **Consistent Performance Advantage:** WebAssembly consistently outperforms JavaScript across all test scenarios, with performance gains ranging from 33.5% to 77.4%.
+
+2. **Scalability Benefits:** As processing complexity increases (intensity 10 vs 20), WebAssembly's performance advantage becomes more pronounced. While JavaScript processing time increased by 247%, WebAssembly only increased by 17.9%.
+
+3. **Real-World Impact:** For interactive multimedia applications requiring real-time processing, these performance differences translate to significantly improved user experience and responsiveness.
+
+4. **Computational Efficiency:** The dramatic improvement at higher intensities demonstrates WebAssembly's superior handling of computationally intensive operations - a crucial consideration for professional multimedia workflows.
+
+These results validate WebAssembly as an essential technology for performance-critical multimedia applications, supporting the learning objectives of this tutorial for 2nd-year multimedia students [(1, 5)](#references).
 
 ## Conclusion - Next Steps for Multimedia Students
 

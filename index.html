@@ -32,13 +32,7 @@
         <strong>WebAssembly not loaded!</strong> Please compile the C++ code first using the build script.
     </div>
     
-    <div>
-        <label for="imageUpload">Upload Your Image:</label>
-        <input type="file" id="imageUpload" accept="image/*">
-        <small>Supports JPG, PNG, GIF, etc.</small>
-    </div>
-    
-    <br>
+    <p><em>Using default LAB.png image for demonstration</em></p>
     
     <div>
         <label for="implementation">Processing Engine:</label>
@@ -67,10 +61,10 @@
     
     <div>
         <h3>Original Image</h3>
-        <canvas id="originalCanvas" width="400" height="300"></canvas>
+        <img id="originalImage" src="screenshots/LAB.png" alt="Original LAB Image" style="max-width: 400px; border: 1px solid #ccc;">
         
         <h3>Processed Image</h3>
-        <canvas id="filteredCanvas" width="400" height="300"></canvas>
+        <img id="filteredImage" src="screenshots/LAB.png" alt="Processed LAB Image" style="max-width: 400px; border: 1px solid #ccc;">
     </div>
     
     <br>

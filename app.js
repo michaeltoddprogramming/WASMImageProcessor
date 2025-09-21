@@ -1,11 +1,10 @@
 // main app logic
 
 let originalImageData = null;
-let originalCanvas = document.getElementById('originalCanvas');
-let filteredCanvas = document.getElementById('filteredCanvas');
-let originalCtx = originalCanvas.getContext('2d');
-let filteredCtx = filteredCanvas.getContext('2d');
+let filteredImageElement;
 let wasmLoaded = false;
+
+
 
 // JS versions of the filters for comparison
 
@@ -142,44 +141,26 @@ document.getElementById('intensity').addEventListener('input', (e) => {
     document.getElementById('intensityValue').textContent = e.target.value;
 });
 
-document.getElementById('imageUpload').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-            const maxW = 800;
-            const maxH = 600;
-            let { width, height } = img;
-            
-            // don't want huge images slowing things down
-            if (width > maxW || height > maxH) {
-                const ratio = Math.min(maxW / width, maxH / height);
-                width = Math.floor(width * ratio);
-                height = Math.floor(height * ratio);
-            }
-            
-            originalCanvas.width = width;
-            originalCanvas.height = height;
-            filteredCanvas.width = width;
-            filteredCanvas.height = height;
-            
-            originalCtx.drawImage(img, 0, 0, width, height);
-            filteredCtx.drawImage(img, 0, 0, width, height);
-            
-            originalImageData = originalCtx.getImageData(0, 0, width, height);
-            console.log('loaded image:', width, 'x', height);
-        };
-        img.src = event.target.result;
+function loadDefaultImage() {
+    const img = new Image();
+    img.onload = () => {
+        // Create a temporary canvas to extract image data
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        tempCanvas.width = img.width;
+        tempCanvas.height = img.height;
+        tempCtx.drawImage(img, 0, 0);
+        
+        originalImageData = tempCtx.getImageData(0, 0, img.width, img.height);
+        console.log('loaded default image:', img.width, 'x', img.height);
     };
-    reader.readAsDataURL(file);
-});
+    img.src = 'screenshots/LAB.png';
+}
 
 document.getElementById('applyFilter').addEventListener('click', async () => {
     if (!originalImageData) {
-        alert('Upload an image first');
+        alert('Default image not loaded yet, please wait');
         return;
     }
     
@@ -225,63 +206,33 @@ document.getElementById('applyFilter').addEventListener('click', async () => {
         try {
             await Module.ready;
             
-            if (typeof Module._malloc !== 'function') {
-                throw new Error('malloc not found');
-            }
-            if (typeof Module._free !== 'function') {
-                throw new Error('free not found');  
-            }
-            
             const dataSize = imageData.data.length;
             const ptr = Module._malloc(dataSize);
             
-            if (!ptr) {
-                throw new Error('malloc failed');
-            }
-            
-            console.log('allocated', dataSize, 'bytes at', ptr);
-            
-            let mem;
-            
-            if (typeof HEAPU8 !== 'undefined') {
-                mem = HEAPU8;
-            } else if (typeof wasmMemory !== 'undefined' && wasmMemory.buffer) {
-                mem = new Uint8Array(wasmMemory.buffer);
-            } else {
-                throw new Error('cant access wasm memory');
-            }
-            
+            const mem = HEAPU8 || new Uint8Array(wasmMemory.buffer);
             mem.set(imageData.data, ptr);
             
             switch (filter) {
                 case 'blur':
-                    if (!Module._applyBlur) throw new Error('blur function missing');
                     Module._applyBlur(ptr, imageData.width, imageData.height, intensity);
                     break;
                 case 'brightness':
-                    if (!Module._adjustBrightness) throw new Error('brightness function missing');
                     Module._adjustBrightness(ptr, imageData.width, imageData.height, intensity / 10.0);
                     break;
                 case 'contrast': 
-                    if (!Module._adjustContrast) throw new Error('contrast function missing');
                     Module._adjustContrast(ptr, imageData.width, imageData.height, intensity / 10.0);
                     break;
                 case 'grayscale':
-                    if (!Module._grayscale) throw new Error('grayscale function missing');
                     Module._grayscale(ptr, imageData.width, imageData.height);
                     break;
             }
             
-            // copy processed data back
-            const currentMem = typeof HEAPU8 !== 'undefined' ? HEAPU8 : new Uint8Array(wasmMemory.buffer);
-            const result = currentMem.subarray(ptr, ptr + dataSize);
+            const result = mem.subarray(ptr, ptr + dataSize);
             imageData.data.set(result);
-            
             Module._free(ptr);
         } catch (error) {
             console.error('WASM failed:', error);
-            alert('WASM error, using JS fallback');
-            // fallback to JS
+            // JS fallback
             switch (filter) {
                 case 'blur':
                     jsApplyBlur(imageData, imageData.width, imageData.height, intensity);
@@ -302,7 +253,14 @@ document.getElementById('applyFilter').addEventListener('click', async () => {
     const t2 = performance.now();
     const time = t2 - t1;
     
-    filteredCtx.putImageData(imageData, 0, 0);
+    // Convert processed imageData to image URL and update the img element
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = imageData.width;
+    tempCanvas.height = imageData.height;
+    tempCtx.putImageData(imageData, 0, 0);
+    
+    filteredImageElement.src = tempCanvas.toDataURL();
     
     document.getElementById('performance').innerHTML = `
         Processing time (${implementation}): ${time.toFixed(1)}ms
@@ -316,61 +274,23 @@ document.getElementById('applyFilter').addEventListener('click', async () => {
 });
 
 document.getElementById('resetImage').addEventListener('click', () => {
-    if (originalImageData) {
-        filteredCtx.putImageData(originalImageData, 0, 0);
-        document.getElementById('performance').innerHTML = 'Reset to original';
-        console.log('reset');
-    }
+    filteredImageElement.src = 'screenshots/LAB.png';
+    document.getElementById('performance').innerHTML = 'Reset to original LAB image';
+    console.log('reset to original');
 });
 
-// CREATE A DEFAULT TEST IMAGE ON PAGE LOAD
-window.onload = async () => {
-    console.log('PAGE LOADED - CREATING DEFAULT TEST IMAGE');
+// Initialize when page loads
+window.onload = () => {
+    console.log('PAGE LOADED - LOADING DEFAULT IMAGE');
     
-    // CHECK WASM AVAILABILITY FIRST (WAIT A BIT FOR MODULE TO LOAD)
+    // Initialize image elements
+    filteredImageElement = document.getElementById('filteredImage');
+    
+    // Check WASM availability
     setTimeout(() => {
         checkWasmAvailability();
     }, 2000);
     
-    // CREATE A COLORFUL TEST PATTERN
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 400;
-    canvas.height = 300;
-    
-    // GRADIENT BACKGROUND
-    const gradient = ctx.createLinearGradient(0, 0, 400, 300);
-    gradient.addColorStop(0, '#ff6b6b');
-    gradient.addColorStop(0.5, '#4ecdc4');
-    gradient.addColorStop(1, '#45b7d1');
-    
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 400, 300);
-    
-    // ADD SOME SHAPES FOR VISUAL INTEREST
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('WASM', 200, 100);
-    ctx.fillText('Demo', 200, 160);
-    
-    // ADD SOME CIRCLES
-    for (let i = 0; i < 20; i++) {
-        ctx.beginPath();
-        ctx.arc(
-            Math.random() * 400,
-            Math.random() * 300,
-            Math.random() * 20 + 5,
-            0, 2 * Math.PI
-        );
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
-        ctx.fill();
-    }
-    
-    // DRAW ON BOTH CANVASES
-    originalCtx.drawImage(canvas, 0, 0);
-    filteredCtx.drawImage(canvas, 0, 0);
-    
-    // STORE AS ORIGINAL IMAGE DATA
-    originalImageData = originalCtx.getImageData(0, 0, 400, 300);
+    // Load the default LAB.png image
+    loadDefaultImage();
 };
