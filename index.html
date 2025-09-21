@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Image Processor</title>
+    
+    <script>
+        var Module = {
+            onRuntimeInitialized: function() {
+                console.log('WASM loaded');
+                window.wasmReady = true;
+                
+                if (typeof checkWasmAvailability === 'function') {
+                    checkWasmAvailability();
+                }
+            },
+            onAbort: function(what) {
+                console.error('WASM failed:', what);
+                window.wasmReady = false;
+            }
+        };
+    </script>
+    
+    <script src="imagefilters.js"></script>
+</head>
+<body>
+    <h1>WebAssembly Image Processor</h1>
+    <p>Demonstrating WASM vs JavaScript Performance</p>
+    
+    <div id="wasmWarning" style="display: none;">
+        <strong>WebAssembly not loaded!</strong> Please compile the C++ code first using the build script.
+    </div>
+    
+    <div>
+        <label for="imageUpload">Upload Your Image:</label>
+        <input type="file" id="imageUpload" accept="image/*">
+        <small>Supports JPG, PNG, GIF, etc.</small>
+    </div>
+    
+    <br>
+    
+    <div>
+        <label for="implementation">Processing Engine:</label>
+        <select id="implementation">
+            <option value="js">JavaScript</option>
+            <option value="wasm">WebAssembly</option>
+        </select>
+        
+        <label for="filter">Filter Type:</label>
+        <select id="filter">
+            <option value="blur">Blur</option>
+            <option value="brightness">Brightness</option>
+            <option value="contrast">Contrast</option>
+            <option value="grayscale">Grayscale</option>
+        </select>
+        
+        <label for="intensity">Intensity: <span id="intensityValue">5</span></label>
+        <input type="range" id="intensity" min="1" max="20" value="5" step="1">
+        
+        <br><br>
+        <button id="applyFilter">Apply Filter</button>
+        <button id="resetImage">Reset Image</button>
+    </div>
+    
+    <br>
+    
+    <div>
+        <h3>Original Image</h3>
+        <canvas id="originalCanvas" width="400" height="300"></canvas>
+        
+        <h3>Processed Image</h3>
+        <canvas id="filteredCanvas" width="400" height="300"></canvas>
+    </div>
+    
+    <br>
+    
+    <div id="performance">
+        Processing Time: Ready to process your image!
+    </div>
+    
+    <p>Try processing the same image with both JavaScript and WebAssembly to see the performance difference!</p>
+    
+    <script src="app.js"></script>
+</body>
+</html>
